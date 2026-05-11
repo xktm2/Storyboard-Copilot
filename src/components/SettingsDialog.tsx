@@ -32,6 +32,7 @@ interface SettingsCheckboxCardProps {
 }
 
 const PROVIDER_REGISTER_URLS: Record<string, string> = {
+  apiyi: 'https://api.apiyi.com',
   ppio: 'https://ppio.com/user/register?invited_by=WGY0DZ',
   grsai: 'https://grsai.com',
   kie: 'https://kie.ai?ref=eef20ef0b0595cad227d45b29c635f6c',
@@ -39,11 +40,14 @@ const PROVIDER_REGISTER_URLS: Record<string, string> = {
 };
 
 const PROVIDER_GET_KEY_URLS: Record<string, string> = {
+  apiyi: 'https://api.apiyi.com',
   ppio: 'https://ppio.com/settings/key-management',
   grsai: 'https://grsai.com/zh/dashboard/api-keys',
   kie: 'https://kie.ai/api-key',
   fal: 'https://fal.ai/dashboard/keys',
 };
+
+const VISIBLE_PROVIDERS = ['apiyi'];
 
 function SettingsCheckboxCard({
   title,
@@ -133,13 +137,8 @@ export function SettingsDialog({
     setEnableUpdateDialog,
   } = useSettingsStore();
   const providers = useMemo(() => {
-    const providerOrder = ['kie', 'ppio', 'fal', 'grsai'];
-    const providerIndex = new Map(providerOrder.map((id, index) => [id, index]));
-    return listModelProviders().slice().sort((left, right) => {
-      const leftIndex = providerIndex.get(left.id) ?? Number.MAX_SAFE_INTEGER;
-      const rightIndex = providerIndex.get(right.id) ?? Number.MAX_SAFE_INTEGER;
-      return leftIndex - rightIndex;
-    });
+    return listModelProviders()
+      .filter((provider) => VISIBLE_PROVIDERS.includes(provider.id));
   }, []);
   const [activeCategory, setActiveCategory] = useState<SettingsCategory>(initialCategory);
   const [appVersion, setAppVersion] = useState<string>('');

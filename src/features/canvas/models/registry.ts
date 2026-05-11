@@ -31,7 +31,7 @@ const imageModelMap = new Map<string, ImageModelDefinition>(
   imageModels.map((model) => [model.id, model])
 );
 
-export const DEFAULT_IMAGE_MODEL_ID = 'kie/nano-banana-2';
+export const DEFAULT_IMAGE_MODEL_ID = 'apiyi/gpt-image-2';
 
 const imageModelAliasMap = new Map<string, string>([
   ['gemini-3.1-flash', 'ppio/gemini-3.1-flash'],
