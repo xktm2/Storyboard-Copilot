@@ -9,12 +9,13 @@ import { imageUrlToDataUrl, persistImageLocally } from '@/features/canvas/applic
 import type { AiGateway, GenerateImagePayload } from '../application/ports';
 
 async function normalizeReferenceImages(payload: GenerateImagePayload): Promise<string[] | undefined> {
-  const isKieModel = payload.model.startsWith('kie/');
-  const isFalModel = payload.model.startsWith('fal/');
+  const useDataUrl = payload.model.startsWith('kie/')
+    || payload.model.startsWith('fal/')
+    || payload.model.startsWith('apiyi/');
   return payload.referenceImages
     ? await Promise.all(
       payload.referenceImages.map(async (imageUrl) =>
-        isKieModel || isFalModel
+        useDataUrl
           ? await imageUrlToDataUrl(imageUrl)
           : await persistImageLocally(imageUrl)
       )
