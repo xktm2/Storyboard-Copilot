@@ -72,16 +72,15 @@ impl ApiyiModelAdapter for Seedream5Adapter {
 
         if has_reference_images {
             let reference_images = request.reference_images.as_deref().unwrap_or(&[]);
-            // Seedream accepts HTTP URLs and data URLs in the image array
-            let valid_images: Vec<String> = reference_images
+            // Seedream 5.0 only accepts HTTP URLs in the image array (no data URLs, no multipart)
+            let valid_images: Vec<&String> = reference_images
                 .iter()
-                .filter(|s| is_http_url(s) || s.starts_with("data:"))
-                .cloned()
+                .filter(|s| is_http_url(s))
                 .collect();
 
             if valid_images.len() != reference_images.len() {
                 return Err(AIError::InvalidRequest(
-                    "Seedream 5.0 reference images must be HTTP URLs or data URLs".to_string(),
+                    "Seedream 5.0 reference images must be publicly accessible HTTP URLs. Local images (data URLs) are not supported.".to_string(),
                 ));
             }
 
